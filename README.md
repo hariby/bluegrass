@@ -87,7 +87,7 @@ Deploy cert and config files to DE10-Nano.
 
 ```shell
 # For Device of Core1
-$ ansible-playbook -i [IP address of your device], ansible/playbook_certs_deploy.yml --extra-vars "cert_id=${CERT_ID} thing_arn=${THING_ARN1} iot_host=${IOT_HOST} gg_host=${GG_HOST}"
+$ ansible-playbook -i [IP address of your device], ansible/playbook_certs_deploy.yml --extra-vars "cert_id=${CERT_ID} thing_arn=${THING_ARN} iot_host=${IOT_HOST} gg_host=${GG_HOST}"
 ```
 
 #### Associate serivce role to your account
