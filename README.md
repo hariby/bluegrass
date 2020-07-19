@@ -46,14 +46,12 @@ Please save your `certificateArn`, this will be used when creating Greengrass co
 #### Create Greengrass components for DE10-Nano
 ```shell
 $ export MODEL_S3_URI=[your S3 uri]
-$ export CERT_ARN1=[your certificateArn1]
-$ export CERT_ARN2=[your certificateArn2]
+$ export CERT_ARN=[your certificateArn]
 $ aws cloudformation create-stack --stack-name Bluegrass --capabilities CAPABILITY_NAMED_IAM --template-body "$(aws cloudformation package --template-file deploy/greengrass.yaml --s3-bucket ${BLUEGRASS_S3_BUCKET_NAME})" \
 --parameters \
 ParameterKey="ModelS3Uri",ParameterValue="${MODEL_S3_URI}" \
 ParameterKey="S3BucketName",ParameterValue="${BLUEGRASS_S3_BUCKET_NAME}" \
-ParameterKey="Core01CertificateArn",ParameterValue="${CERT_ARN1}" \
-ParameterKey="Core02CertificateArn",ParameterValue="${CERT_ARN2}"
+ParameterKey="Core01CertificateArn",ParameterValue="${CERT_ARN}" 
 ```
 
 #### Setup DE10-Nano
@@ -64,19 +62,19 @@ Setup network and ssh-keys to enable to access your de10nano via network without
 
 Run ansible to install greengrass and setup for blueoil-inference.
 ```shell
-$ ansible-playbook -i [IP address of Core1],[IP address of Core2] ansible/playbook.yml
+$ ansible-playbook -i [IP address of your device], ansible/playbook.yml
 ```
 
 #### Upload certificate and config files to DE10-Nano
-Get your cert_id from `${CERT_ARN1}`, `${CERT_ARN2}`.
+Get your cert_id from `${CERT_ARN}`.
 ```shell
-$ export CERT_ID1=$(echo ${CERT_ARN1} | sed -e 's/.*\///g')
-$ export CERT_ID2=$(echo ${CERT_ARN2} | sed -e 's/.*\///g')
+$ export CERT_ID=$(echo ${CERT_ARN} | sed -e 's/.*\///g')
 ```
+
 Check your thing_arn of your Core device. Find thing_arn for your core in the AWS IoT Greengrass console under [Cores](https://console.aws.amazon.com/iot/home/#/greengrass/corehub).
+
 ```shell
-$ export THING_ARN1=[thing arn of your Core1]
-$ export THING_ARN2=[thing arn of your Core2]
+$ export THING_ARN=[thing arn of your Core]
 ```
 
 Set your IOT_HOST and GG_HOST.
@@ -84,12 +82,12 @@ Set your IOT_HOST and GG_HOST.
 $ export IOT_HOST=$(aws iot describe-endpoint --endpoint-type iot:Data-ATS --query 'endpointAddress' --output=text)
 $ export GG_HOST=$(echo ${IOT_HOST} | sed -e 's/.*-ats/greengrass-ats/g')
 ```
+
 Deploy cert and config files to DE10-Nano.
+
 ```shell
 # For Device of Core1
-$ ansible-playbook -i [IP address of Core1], ansible/playbook_certs_deploy.yml --extra-vars "cert_id=${CERT_ID1} thing_arn=${THING_ARN1} iot_host=${IOT_HOST} gg_host=${GG_HOST}"
-# For Device of Core2
-$ ansible-playbook -i [IP address of Core2], ansible/playbook_certs_deploy.yml --extra-vars "cert_id=${CERT_ID2} thing_arn=${THING_ARN2} iot_host=${IOT_HOST} gg_host=${GG_HOST}"
+$ ansible-playbook -i [IP address of your device], ansible/playbook_certs_deploy.yml --extra-vars "cert_id=${CERT_ID} thing_arn=${THING_ARN1} iot_host=${IOT_HOST} gg_host=${GG_HOST}"
 ```
 
 #### Associate serivce role to your account
