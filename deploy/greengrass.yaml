@@ -6,8 +6,8 @@ Parameters:
     Type: String
   Core01CertificateArn:
     Type: String
-  Core02CertificateArn:
-    Type: String
+#   Core02CertificateArn:
+#     Type: String
 Resources:
   BluegrassInferenceServerExecutionRole:
     Type: AWS::IAM::Role
@@ -189,31 +189,31 @@ Resources:
                 - Ref: 'AWS::Region'
                 - Ref: 'AWS::AccountId'
                 - thing/Core01
-  Core02:
-    Type: 'AWS::IoT::Thing'
-    Properties:
-      ThingName: "Core02"
-  Core02Definition:
-    Type: 'AWS::Greengrass::CoreDefinition'
-    Properties:
-      Name: "Core02Definition"
-  Core02DefinitionVersion:
-    Type: 'AWS::Greengrass::CoreDefinitionVersion'
-    Properties:
-      CoreDefinitionId:
-        Ref: Core02Definition
-      Cores:
-        - Id: "Core02"
-          CertificateArn:
-            Ref: Core02CertificateArn
-          SyncShadow: 'false'
-          ThingArn:
-            Fn::Join:
-              - ':'
-              - - 'arn:aws:iot'
-                - Ref: 'AWS::Region'
-                - Ref: 'AWS::AccountId'
-                - thing/Core02
+#   Core02:
+#     Type: 'AWS::IoT::Thing'
+#     Properties:
+#       ThingName: "Core02"
+#   Core02Definition:
+#     Type: 'AWS::Greengrass::CoreDefinition'
+#     Properties:
+#       Name: "Core02Definition"
+#   Core02DefinitionVersion:
+#     Type: 'AWS::Greengrass::CoreDefinitionVersion'
+#     Properties:
+#       CoreDefinitionId:
+#         Ref: Core02Definition
+#       Cores:
+#         - Id: "Core02"
+#           CertificateArn:
+#             Ref: Core02CertificateArn
+#           SyncShadow: 'false'
+#           ThingArn:
+#             Fn::Join:
+#               - ':'
+#               - - 'arn:aws:iot'
+#                 - Ref: 'AWS::Region'
+#                 - Ref: 'AWS::AccountId'
+#                 - thing/Core02
   InferenceFunctionDefinition:
     Type: 'AWS::Greengrass::FunctionDefinition'
     Properties:
@@ -355,27 +355,27 @@ Resources:
           Ref: ModelResourceDefinitionVersion
         SubscriptionDefinitionVersionArn:
           Ref: StreamSubscriptionDefinitionVersion
-  Core02Group:
-    Type: 'AWS::Greengrass::Group'
-    Properties:
-      Name: Core02Group
-      RoleArn:
-        Fn::Join:
-          - ':'
-          - - 'arn:aws:iam:'
-            - Ref: 'AWS::AccountId'
-            - role/BluegrassRole
-      InitialVersion:
-        ConnectorDefinitionVersionArn:
-          Ref: StreamConnectorDefinitionVersion
-        CoreDefinitionVersionArn:
-          Ref: Core02DefinitionVersion
-        FunctionDefinitionVersionArn:
-          Ref: InferenceFunctionDefinitionVersion
-        ResourceDefinitionVersionArn:
-          Ref: ModelResourceDefinitionVersion
-        SubscriptionDefinitionVersionArn:
-          Ref: StreamSubscriptionDefinitionVersion
+#   Core02Group:
+#     Type: 'AWS::Greengrass::Group'
+#     Properties:
+#       Name: Core02Group
+#       RoleArn:
+#         Fn::Join:
+#           - ':'
+#           - - 'arn:aws:iam:'
+#             - Ref: 'AWS::AccountId'
+#             - role/BluegrassRole
+#       InitialVersion:
+#         ConnectorDefinitionVersionArn:
+#           Ref: StreamConnectorDefinitionVersion
+#         CoreDefinitionVersionArn:
+#           Ref: Core02DefinitionVersion
+#         FunctionDefinitionVersionArn:
+#           Ref: InferenceFunctionDefinitionVersion
+#         ResourceDefinitionVersionArn:
+#           Ref: ModelResourceDefinitionVersion
+#         SubscriptionDefinitionVersionArn:
+#           Ref: StreamSubscriptionDefinitionVersion
   BluegrassPolicy:
     Type: AWS::IoT::Policy
     Properties:
@@ -410,20 +410,20 @@ Resources:
       Principal:
         Ref: Core01CertificateArn
     DependsOn: Core01
-  Core02PolicyPrincipalAttachment:
-    Type: AWS::IoT::PolicyPrincipalAttachment
-    Properties:
-      PolicyName: "BluegrassPolicy"
-      Principal:
-        Ref: Core02CertificateArn
-    DependsOn: BluegrassPolicy
-  Core02ThingPrincipalAttachment:
-    Type: AWS::IoT::ThingPrincipalAttachment
-    Properties:
-      ThingName: "Core02"
-      Principal:
-        Ref: Core02CertificateArn
-    DependsOn: Core02
+#   Core02PolicyPrincipalAttachment:
+#     Type: AWS::IoT::PolicyPrincipalAttachment
+#     Properties:
+#       PolicyName: "BluegrassPolicy"
+#       Principal:
+#         Ref: Core02CertificateArn
+#     DependsOn: BluegrassPolicy
+#   Core02ThingPrincipalAttachment:
+#     Type: AWS::IoT::ThingPrincipalAttachment
+#     Properties:
+#       ThingName: "Core02"
+#       Principal:
+#         Ref: Core02CertificateArn
+#     DependsOn: Core02
 Outputs:
   CommandToDeployGroup:
     Value:
@@ -434,20 +434,20 @@ Outputs:
               - "Core01Group"
               - "LatestVersionArn"
           - );
-          - groupVersion2=$(cut -d'/' -f6 <<<
-          - Fn::GetAtt:
-              - "Core02Group"
-              - "LatestVersionArn"
-          - );
+#           - groupVersion2=$(cut -d'/' -f6 <<<
+#           - Fn::GetAtt:
+#               - "Core02Group"
+#               - "LatestVersionArn"
+#           - );
           - aws --region
           - Ref: 'AWS::Region'
           - greengrass create-deployment --group-id
           - Ref: Core01Group
           - '--deployment-type NewDeployment --group-version-id'
           - $groupVersion1;
-          - aws --region
-          - Ref: 'AWS::Region'
-          - greengrass create-deployment --group-id
-          - Ref: Core02Group
-          - '--deployment-type NewDeployment --group-version-id'
-          - $groupVersion2;
+#           - aws --region
+#           - Ref: 'AWS::Region'
+#           - greengrass create-deployment --group-id
+#           - Ref: Core02Group
+#           - '--deployment-type NewDeployment --group-version-id'
+#           - $groupVersion2;
