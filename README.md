@@ -1,13 +1,19 @@
-# Bluegrass (A sample demonstration system of LeapMind Blueoil x AWS IoT Greengrass)
+# Bluegrass
+A sample MLOps system of LeapMind Blueoil x AWS Components (AWS IoT Greengrass, Amazon SageMaker)
+
 ## System Outline
-![system outline](https://user-images.githubusercontent.com/12394960/85096104-44290480-b22e-11ea-97a9-d0e1b426edfb.png)
+![system outline](https://user-images.githubusercontent.com/12394960/87919648-12b48a80-cab3-11ea-819d-e799b12d9411.png)
 
 ## Setup AWS environment and devices
+### Prerequisites
+* AWS account
+* Terasic DE10-Nano Kit x 2
+
 ### Requirements
 You need following packages to setup components.
 #### AWS CLI
 
-Please set up the AWS Command Line Interface (AWS CLI), check [official refferences](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html).
+Please set up the AWS Command Line Interface (AWS CLI), check [official User Guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). You can choose the region where Amazon SageMaker and AWS IoT Greengrass are supported (see [Region Table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)). 
 #### Ansible
 
 You can install with `pip` command.
@@ -30,7 +36,7 @@ $ aws cloudformation create-stack --stack-name BlueoilSagemaker --template-body 
 ```
 
 #### Run training on Amazon SageMaker 
-See [blueoil_sagemaker/README.md](blueoil_sagemaker/README.md).
+Open Jupyter/JupyterLab on the [Amazon SageMaker console](https://console.aws.amazon.com/sagemaker/). Find and run the notebook in the `bluegrass/blueoil_sagemaker` directory, e.g., [`blueoil_cifar10_example.ipynb`](./blueoil_sagemaker/blueoil_cifar10_example.ipynb) or [`blueoil_openimages_example.ipynb`](./blueoil_sagemaker/blueoil_openimages_example.ipynb) .  
 
 ### Blueoil x AWS IoT Greengrass
 #### Create certificate files for AWS IoT Greengrass
@@ -39,11 +45,14 @@ Run following script.
 $ deploy/create_cert.sh
 ...
 Certificate files are created in certs/xxxxxx...xxxxxx
-certificateArn is "arn:aws:iot:xxxxxx:xxxxxx:cert/xxxxxx...xxxxxx"
+certificateArn is "arn:aws:iot:ap-northeast-1:123456789012:cert/xxxxxx...xxxxxx"
 ```
 Please save your `certificateArn`, this will be used when creating Greengrass components in your AWS account.
 
+In this sample, you need to run this command twice to create certicicates for each DE10-Nano device.
+
 #### Create Greengrass components for DE10-Nano
+Run commands below, where `MODEL_S3_URI` will be set as a form of `s3://sagemaker-ap-northeast-1-123456789012/blueoil-sagemaker-2020-XX-XX-XX-XX-XX-XXZ/output/converted/output.tar.gz`. 
 ```shell
 $ export MODEL_S3_URI=[your S3 uri]
 $ export CERT_ARN=[your certificateArn]
@@ -98,6 +107,31 @@ $ ./deploy/associate_service_role.sh
     "AssociatedAt": "2020-XX-XXTXX:XX:XXZ"
 }
 ```
+
+## Initial deployment
+### Manualy deployment from the AWS IoT console
+After completing the above installations, you need to deploy a model and an application to devices manually.
+
+Access to the AWS IoT console.
+<div align="center"><img src="https://user-images.githubusercontent.com/12394960/88011703-fff19280-cb52-11ea-91fb-21e5a58ba841.png" width=75%></div>
+Select the group and click [Action] -> [Deploy].
+
+<div align="center"><img src="https://user-images.githubusercontent.com/12394960/88011860-62e32980-cb53-11ea-9b51-6f05336afcb5.png" width=75%></div>
+
+The following screen is shown at the first deployment to the group.
+Select [Automatic detection].
+
+<div align="center"><img src="https://user-images.githubusercontent.com/12394960/88011874-6a0a3780-cb53-11ea-980a-7b6b0f01a89f.png" width=50%></div>
+
+Confirm that the status is changed as [In Progress]->[Successfully Completed] as shown below.
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/12394960/88011883-70001880-cb53-11ea-9394-a310e7afbdff.png" width=75%>
+  <img src="https://user-images.githubusercontent.com/12394960/88011891-73939f80-cb53-11ea-82a7-89953f6d2215.png" width=75%>
+</div>
+
+### Check inference results
+You can see the video and inference results by accessing to `http://[device's IP address]:8080`
 
 ## Update components
 ### Update AWS Lambda function
