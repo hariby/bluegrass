@@ -46,7 +46,7 @@ IS_DEBUG = False
 
 NETWORK_CLASS = LMFYoloQuantize
 
-DATASET_CLASS = type('DATASET_CLASS', (OpenImagesV4BoundingBoxBase,), {'extend_dir': '/opt/ml/input/data/dataset/', 'validation_extend_dir': '/opt/ml/input/data/dataset/'})
+DATASET_CLASS = type('DATASET_CLASS', (OpenImagesV4BoundingBoxBase,), {'extend_dir': '/opt/ml/input/data/train/', 'validation_extend_dir': '/opt/ml/input/data/validation/'})
 
 IMAGE_SIZE = [224, 224]
 BATCH_SIZE = 16
