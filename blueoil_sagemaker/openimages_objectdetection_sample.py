@@ -52,7 +52,7 @@ IMAGE_SIZE = [224, 224]
 BATCH_SIZE = 16
 DATA_FORMAT = "NHWC"
 TASK = Tasks.OBJECT_DETECTION
-CLASSES = ['Airplane', 'Car', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Boat', 'Truck']
+CLASSES = ['Bird', 'Boat', 'Cat', 'Horse', 'Truck', 'Deer', 'Frog', 'Dog', 'Airplane', 'Car', ]
 
 MAX_EPOCHS = 400
 SAVE_CHECKPOINT_STEPS = 1000
