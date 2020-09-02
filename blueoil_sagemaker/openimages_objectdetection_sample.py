@@ -46,13 +46,13 @@ IS_DEBUG = False
 
 NETWORK_CLASS = LMFYoloQuantize
 
-DATASET_CLASS = type('DATASET_CLASS', (OpenImagesV4BoundingBoxBase,), {'extend_dir': '/opt/ml/input/data/dataset/openimagesv4_10/train/', 'validation_extend_dir': '/opt/ml/input/data/dataset/openimagesv4_10/validation/'})
+DATASET_CLASS = type('DATASET_CLASS', (OpenImagesV4BoundingBoxBase,), {'extend_dir': '/opt/ml/input/data/dataset/openimagesv4_10_small/train/', 'validation_extend_dir': '/opt/ml/input/data/dataset/openimagesv4_10_small/validation/'})
 
 IMAGE_SIZE = [224, 224]
 BATCH_SIZE = 16
 DATA_FORMAT = "NHWC"
 TASK = Tasks.OBJECT_DETECTION
-CLASSES = ['Bird', 'Boat', 'Cat', 'Horse', 'Truck', 'Deer', 'Frog', 'Dog', 'Airplane', 'Car', ]
+CLASSES = ['Bird', 'Boat', 'Cat', 'Horse', 'Truck', 'Deer', 'Frog', 'Dog', 'Airplane', 'Car']
 
 MAX_EPOCHS = 400
 SAVE_CHECKPOINT_STEPS = 1000
